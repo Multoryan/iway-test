@@ -10,16 +10,21 @@ const initialState = {
 export function user (state = initialState, action) {
     switch (action.type) {
         case USER_SUCCESS: 
-            window.localStorage.setItem('isAuth', true);
+            // В localStorage эту информацию хранить не следует!!!
+            window.localStorage.setItem('isAuth', 1);
+            window.localStorage.setItem('accessToken', action.payload.token);
+            window.localStorage.setItem('refreshToken', action.payload.refresh_token);
             return {
                 ...state,
                 isAuth: true,
-                accessToken: action.payload.accessToken,
-                refreshToken: action.payload.refreshToken,
+                accessToken: action.payload.token,
+                refreshToken: action.payload.refresh_token,
                 error: null
             };
         case USER_ERROR:
-            window.localStorage.setItem('isAuth', false)
+            window.localStorage.setItem('isAuth', 0);
+            window.localStorage.setItem('accessToken', '');
+            window.localStorage.setItem('refreshToken', '');
             return {
                 ...state,
                 isAuth: false,

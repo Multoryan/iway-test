@@ -4,12 +4,15 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Redirect
+    Redirect,
+    useParams
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import './index.css';
 import AuthForm from './auth/form/AuthForm.js';
+import TripsList from './trips/list/TripsList.js';
+import TripsItem from './trips/item/TripsItem.js';
 import * as serviceWorker from './serviceWorker';
 
 function PrivateRoute ({ store, children, ...rest }) {
@@ -19,7 +22,7 @@ function PrivateRoute ({ store, children, ...rest }) {
       <Route
         {...rest}
         render={({ location }) =>
-            isAuth === 'true' ? (
+            +isAuth ? (
                 children
             ) : (
                 <Redirect
@@ -34,12 +37,20 @@ function PrivateRoute ({ store, children, ...rest }) {
     );
   }
 
+function TripsItemWihParams () {
+    const { id } = useParams();
+    return <TripsItem id={id} />;
+}
+
 ReactDOM.render(
     <Provider store={store}>
         <Router>
             <Switch>
                 <PrivateRoute exact path="/">
-                    <h1>Hello</h1>
+                    <TripsList />
+                </PrivateRoute>
+                <PrivateRoute path="/trip/:id">
+                    <TripsItemWihParams />
                 </PrivateRoute>
                 <Route path="/auth">
                     <AuthForm />
